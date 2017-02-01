@@ -1,0 +1,33 @@
+---
+
+- name: Create dir ScipionUserData
+  file:
+    path: /home/centos/ScipionUserData
+    state: directory
+    owner: centos
+    group: centos
+
+- name: Create dir .config
+  file:
+    path: /home/centos/.config
+    state: directory
+    owner: centos
+    group: centos
+
+- name: Create filesystem
+  filesystem:
+    fstype: xfs
+    dev: /dev/vdb
+
+- name: Mount volume
+  mount:
+    name: /opt
+    src: /dev/vdb
+    fstype: xfs
+    state: mounted
+
+- name: Copy exports
+  copy: src=exports dest=/etc/exports owner=root group=root
+
+- name: Restart nfs
+  service: name=nfs-server state=restarted

@@ -1,0 +1,14 @@
+Building binary
+
+git clone --depth 1 -b web-develop https://github.com/I2PC/scipion-web
+./scipion config
+change scipion.conf
+./scipion config
+yum install  wget
+
+./scipion install -j 8
+./scipion install eman2.12
+./scipion install resmap
+change in tar.py required (scipion -> scipion-web)
+python scipion-web/scripts/tar.py scipion-web-binary
+upload binary to website

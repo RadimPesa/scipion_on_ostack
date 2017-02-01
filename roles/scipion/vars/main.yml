@@ -1,0 +1,6 @@
+---
+
+binary_url: "http://dior.ics.muni.cz/~cuda/scipion_web_bin.tgz"
+scipion_config_file: "/opt/scipion-web/config/scipion.conf"
+mpi_hosts_file: "/home/centos/mpi_hosts"
+scipion_home_dir: "/opt/scipion-web"

@@ -1,0 +1,23 @@
+---
+
+- name: Copy ssh files
+  copy:
+    src: id_rsa
+    dest: /home/centos/.ssh/id_rsa
+    owner: centos
+    group: centos
+    mode: 0600
+
+- name: Copy ssh config
+  copy:
+    src: config
+    dest: /home/centos/.ssh/config
+    owner: centos
+    group: centos
+    mode: 0600
+
+- name: Add authorized key
+  authorized_key:
+    user: centos
+    state: present
+    key: "{{ lookup('file','authorized_keys') }}"

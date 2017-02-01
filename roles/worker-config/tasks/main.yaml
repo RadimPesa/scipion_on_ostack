@@ -1,0 +1,26 @@
+---
+
+- set_fact: master_ip="{{ hostvars['localhost']['master_ip'] }}"
+- debug:
+    msg: "{{master_ip}}"
+
+- name: Mount opt
+  mount:
+    name: /opt
+    src: "{{ master_ip }}:/opt"
+    fstype: nfs
+    state: mounted
+
+- name: Mount .config
+  mount:
+    name: /home/centos/.config
+    src: "{{ master_ip }}:/home/centos/.config"
+    fstype: nfs
+    state: mounted
+
+- name: Mount ScipionUserData
+  mount:
+    name: /home/centos/ScipionUserData
+    src: "{{ master_ip }}:/home/centos/ScipionUserData"
+    fstype: nfs
+    state: mounted

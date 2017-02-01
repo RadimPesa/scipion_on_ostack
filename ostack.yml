@@ -1,0 +1,120 @@
+- name: Deploy on OpenStack
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Create a volume
+      os_volume:
+        state: present
+        size: 100
+        display_name: scipion_volume
+
+    - name: Deploy a master
+      os_server:
+        state: present
+        name: master1
+        image: CentOS 7 64-bit
+        key_name: debian
+        wait: yes
+        flavor: m1.xlarge
+        auto_floating_ip: yes
+        network: private
+        security_groups: default,ssh_sg
+        meta:
+          hostname: master.localdomain
+        volumes:
+        - scipion_volume
+      register: master
+    - set_fact: master_ip="{{master.server.public_v4}}"
+    - name: Wait for SSH on the Instance
+      command: >
+        ssh -oBatchMode=yes -oStrictHostKeyChecking=no
+        centos@{{master.server.public_v4}} true
+      register: result
+      until: result|success
+      retries: 5
+      delay: 10
+#    - debug:
+#        msg: "{{master_ip}}"
+    - name: Add master Instance to Inventory
+      add_host: name=master groups=master_servers
+                ansible_ssh_host={{ master.server.public_v4 }}
+
+    - name: Deploy a worker 1
+      os_server:
+        state: present
+        name: worker1
+        image: CentOS 7 64-bit
+        key_name: debian
+        wait: yes
+        flavor: m1.xlarge
+        auto_floating_ip: yes
+        network: private
+        security_groups: default,ssh_sg
+        meta:
+          hostname: worker1.localdomain
+      register: worker1
+    - set_fact: worker1_ip="{{worker1.server.public_v4}}"
+
+    - name: Wait for SSH on the Instance
+      command: >
+        ssh -oBatchMode=yes -oStrictHostKeyChecking=no
+        centos@{{worker1.server.public_v4}} true
+      register: result
+      until: result|success
+      retries: 5
+      delay: 10
+
+    - name: Add CentOS Instance to Inventory
+      add_host: name=worker1 groups=worker_servers
+            ansible_ssh_host={{ worker1.server.public_v4 }}
+
+    - name: Deploy a worker 2
+      os_server:
+        state: present
+        name: worker2
+        image: CentOS 7 64-bit
+        key_name: debian
+        wait: yes
+        flavor: m1.xlarge
+        auto_floating_ip: yes
+        network: private
+        security_groups: default,ssh_sg
+        meta:
+          hostname: worker2.localdomain
+      register: worker2
+    - set_fact: worker2_ip="{{worker2.server.public_v4}}"
+
+    - name: Wait for SSH on the Instance
+      command: >
+        ssh -oBatchMode=yes -oStrictHostKeyChecking=no
+        centos@{{worker2.server.public_v4}} true
+      register: result
+      until: result|success
+      retries: 5
+      delay: 10
+
+    - name: Add CentOS Instance to Inventory
+      add_host: name=worker2 groups=worker_servers
+            ansible_ssh_host={{ worker2.server.public_v4 }}
+
+
+
+- hosts: master_servers
+  remote_user: centos
+  sudo: yes
+  roles:
+    - master-config
+    - nfs
+    - scipion-prerequisities
+    - scipion
+    - ssh
+
+
+- hosts: worker_servers
+  remote_user: centos
+  sudo: yes
+  roles:
+    - nfs
+    - worker-config
+    - scipion-prerequisities
+    - ssh

@@ -1,0 +1,4 @@
+Host 147.251.21.*
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+
