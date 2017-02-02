@@ -48,6 +48,25 @@
     owner: centos
     group: centos
 
+- name: Web protocols
+  blockinfile:
+    dest: "{{ scipion_config_file }}"
+    block: |
+      [WEB_PROTOCOLS]
+      XmippProtRansac = {"useQueue": 0, "numberOfThreads": 4, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
+      EmanProtInitModel = {"useQueue": 0, "numberOfThreads": 4, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
+      XmippProtReconstructSignificant = {"useQueue": 0, "numberOfThreads": 1, "numberOfMpi": 4, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
+      XmippProtAlignVolumeForWeb = {"useQueue": 0, "numberOfThreads": 4, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
+      ProtMovieAlignment = {"useQueue": 0, "numberOfThreads": 1, "numberOfMpi": 1, "queueParams" : ["gpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
+      XmippProtCreateMask3D = {"useQueue": 0, "numberOfThreads": 1, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
+      ProtResMap = {"useQueue": 0, "numberOfThreads": 1, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
+
+- name: Extract sh_alignment
+  unarchive:
+    src: "{{ alig_url }}"
+    dest: "{{ scipion_home_dir }}/software/lib/python2.7/site-packages/"
+    remote_src: True
+
 - name: Change hosts.conf - PARALLEL_COMMAND
   lineinfile:
     dest: "{{ scipion_home_dir }}/config/hosts.conf"
