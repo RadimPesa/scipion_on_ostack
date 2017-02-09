@@ -55,7 +55,7 @@
       [WEB_PROTOCOLS]
       XmippProtRansac = {"useQueue": 0, "numberOfThreads": 4, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
       EmanProtInitModel = {"useQueue": 0, "numberOfThreads": 4, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
-      XmippProtReconstructSignificant = {"useQueue": 0, "numberOfThreads": 1, "numberOfMpi": 4, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
+      XmippProtReconstructSignificant = {"useQueue": 0, "numberOfThreads": 1, "numberOfMpi": 16, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
       XmippProtAlignVolumeForWeb = {"useQueue": 0, "numberOfThreads": 4, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
       ProtMovieAlignment = {"useQueue": 0, "numberOfThreads": 1, "numberOfMpi": 1, "queueParams" : ["gpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
       XmippProtCreateMask3D = {"useQueue": 0, "numberOfThreads": 1, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
@@ -73,17 +73,10 @@
     regexp: '^PARALLEL_COMMAND'
     line: "PARALLEL_COMMAND = /usr/lib64/openmpi/bin/mpirun -hostfile /home/centos/mpi_hosts -np %_(JOB_NODES)d -bynode -x LD_LIBRARY_PATH={{ scipion_home_dir }}/software/lib:$LD_LIBRARY_PATH -x PATH={{ scipion_home_dir }}/software/em/xmipp/bin:$PATH %_(COMMAND)s"
 
-
-- name: Change mpi hostfile - worker1
+- name: Change mpi hostfile
   lineinfile:
     dest: "{{ mpi_hosts_file }}"
     state: present
     create: yes
-    line: "{{ hostvars['localhost']['worker1_ip'] }}"
-
-- name: Change mpi hostfile - worker2
-  lineinfile:
-   dest: "{{ mpi_hosts_file }}"
-   state: present
-   create: yes
-   line: "{{ hostvars['localhost']['worker2_ip'] }}"
+    line: "{{ hostvars[item].inventory_hostname }}"
+  with_items: "{{ groups['worker_servers'] }}"
