@@ -13,14 +13,14 @@
 
 - name: Mount .config
   mount:
-    name: /home/centos/.config
-    src: "{{ master_ip }}:/home/centos/.config"
+    name: "{{ home_dir }}/.config"
+    src: "{{ master_ip }}:{{ home_dir }}/.config"
     fstype: nfs
     state: mounted
 
 - name: Mount ScipionUserData
   mount:
-    name: /home/centos/ScipionUserData
-    src: "{{ master_ip }}:/home/centos/ScipionUserData"
+    name: "{{ home_dir }}/ScipionUserData"
+    src: "{{ master_ip }}:{{ home_dir }}/ScipionUserData"
     fstype: nfs
     state: mounted

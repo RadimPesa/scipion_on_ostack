@@ -1,4 +1,4 @@
 # Scipion on OpenStack
 
-Simple deployment of Scipion cluster with one master and two slaves nodes on OpenStack with Ansible. 
-
+Ansible deployment of Scipion Web Tools (https://github.com/I2PC/scipion-web) cluster on OpenStack.
+Default number of worker nodes is 5, but it can be changed by setting variable "count" in ostack.yml

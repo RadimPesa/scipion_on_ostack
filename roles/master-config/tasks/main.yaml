@@ -2,17 +2,17 @@
 
 - name: Create dir ScipionUserData
   file:
-    path: /home/centos/ScipionUserData
+    path: "{{ home_dir }}/ScipionUserData"
     state: directory
-    owner: centos
-    group: centos
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
 
 - name: Create dir .config
   file:
-    path: /home/centos/.config
+    path: "{{ home_dir }}/.config"
     state: directory
-    owner: centos
-    group: centos
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
 
 - name: Create filesystem
   filesystem:
