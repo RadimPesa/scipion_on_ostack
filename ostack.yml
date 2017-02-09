@@ -78,7 +78,7 @@
   remote_user: centos
   sudo: yes
   roles:
-#    - update-system
+    - update-system
     - master-config
     - nfs
     - scipion-prerequisities
