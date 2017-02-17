@@ -1,0 +1,9 @@
+---
+
+- name: install scipion prerequisities
+  apt: name={{ item }} state=present
+  with_items:
+   - openjdk-8-jdk
+   - libopenmpi-dev
+   - openmpi-bin
+   - gfortran

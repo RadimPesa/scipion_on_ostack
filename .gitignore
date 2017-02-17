@@ -1,4 +1,4 @@
 roles/ssh/files/id_rsa
 roles/ssh/files/authorized_keys
-ostack.retry
+scipion.retry
 *.swp

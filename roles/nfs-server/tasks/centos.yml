@@ -1,0 +1,4 @@
+---
+
+- name: install nfs server
+  yum: name=nfs-utils state=latest

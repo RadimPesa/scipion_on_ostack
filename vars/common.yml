@@ -1,0 +1,15 @@
+---
+
+count: 2
+cluster_id: "ngc"
+flavor_name: "m1.xlarge"
+network_name: "private"
+key_name: "debian"
+volume_name: "scipion_volume_{{ cluster_id }}"
+volume_size: 50
+master_name: "master_{{ cluster_id }}"
+worker_name: "worker_{{ cluster_id }}"
+
+alig_url: "http://dior.ics.muni.cz/~cuda/aliment.tar.gz"
+scipion_config_file: "/opt/scipion-web/config/scipion.conf"
+scipion_home_dir: "/opt/scipion-web"

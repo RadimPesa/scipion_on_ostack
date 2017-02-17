@@ -1,7 +1,8 @@
 ---
 
-binary_url: "http://dior.ics.muni.cz/~cuda/scipion_web_bin.tgz"
-alig_url: "http://dior.ics.muni.cz/~cuda/aliment.tar.gz"
-scipion_config_file: "/opt/scipion-web/config/scipion.conf"
-mpi_hosts_file: "/home/centos/mpi_hosts"
-scipion_home_dir: "/opt/scipion-web"
+#binary_url: "http://dior.ics.muni.cz/~cuda/scipion_web_bin.tgz"
+#alig_url: "http://dior.ics.muni.cz/~cuda/aliment.tar.gz"
+#scipion_config_file: "/opt/scipion-web/config/scipion.conf"
+#mpi_hosts_file: "/home/centos/mpi_hosts"
+#scipion_home_dir: "/opt/scipion-web"
+#user_name: "centos"

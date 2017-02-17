@@ -1,0 +1,8 @@
+---
+
+#os_image: "Ubuntu-16.04-Xenial-64-bit"
+os_image: "Ubuntu_16.4"
+user_name: "ubuntu"
+home_dir: "/home/ubuntu"
+mpi_hosts_file: "/home/ubuntu/mpi_hosts"
+binary_url: "http://dior.ics.muni.cz/~cuda/scipion_web_bin_u.tgz"

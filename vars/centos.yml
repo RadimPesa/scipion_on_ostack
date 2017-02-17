@@ -1,0 +1,6 @@
+---
+os_image: "MU-CentOS-7-64-bit"
+user_name: "centos"
+home_dir: "/home/centos"
+mpi_hosts_file: "/home/centos/mpi_hosts"
+binary_url: "http://dior.ics.muni.cz/~cuda/scipion_web_bin.tgz"

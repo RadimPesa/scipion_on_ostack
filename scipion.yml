@@ -2,20 +2,18 @@
   hosts: localhost
   gather_facts: false
   vars:
-    os_image: "MU-CentOS-7-64-bit"
-    flavor_name: "m1.medium"
-    network_name: "private"
-    key_name: "debian"
-    volume_name: "scipion_volume_ng"
-    master_name: "masterng"
-    worker_name: "workerng"
-    count: 5
+    os: "centos"
+
+  vars_files:
+    - vars/common.yml
+    - vars/{{ os }}.yml
 
   tasks:
+    - debug: var=user_name
     - name: Create a volume
       os_volume:
         state: present
-        size: 50
+        size: "{{ volume_size }}"
         display_name: "{{ volume_name }}"
 
     - name: Deploy a master
@@ -38,7 +36,7 @@
     - name: Wait for SSH on the Instance
       command: >
         ssh -oBatchMode=yes -oStrictHostKeyChecking=no
-        centos@{{master.server.public_v4}} true
+        {{os}}@{{master.server.public_v4}} true
       register: result
       until: result|success
       retries: 5
@@ -75,27 +73,53 @@
 
 
 - hosts: master_servers
-  remote_user: centos
+  remote_user: "{{ user_name }}"
+#  remote_user: centos
   sudo: yes
+  gather_facts: false
+  vars:
+    os: "centos"
+  vars_files:
+    - vars/common.yml
+    - vars/{{ os }}.yml
+  pre_tasks:
+    - name: install python
+      raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
+      when: os == 'ubuntu'
+
+
   roles:
     - update-system
+    - ipv6-disable
+    - ssh
+    - nfs-server
     - master-config
-    - nfs
     - scipion-prerequisities
     - scipion
-    - ssh
+
 
 
 - hosts: worker_servers
-  remote_user: centos
+  remote_user: "{{ user_name }}"
   sudo: yes
+  gather_facts: false
+  vars:
+    os: "centos"
+  vars_files:
+    - vars/common.yml
+    - vars/{{ os }}.yml
   pre_tasks:
+    - name: install python
+      raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
+      when: os == 'ubuntu'
+
     - name: "Wait for SSH banners"
       local_action: wait_for port=22 host="{{ inventory_hostname }}" search_regex=OpenSSH delay=5
       become: False
   roles:
     - update-system
-    - nfs
+    - ssh
+    - ipv6-disable
+    - nfs-client
     - worker-config
     - scipion-prerequisities
-    - ssh

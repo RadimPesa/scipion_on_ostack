@@ -5,48 +5,53 @@
     src: "{{ binary_url }}"
     dest: /opt
     remote_src: True
+
 - name: Change owner
   file:
     path: "{{ scipion_home_dir }}"
-    owner: centos
-    group: centos
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
     recurse: yes
 
 - name: Run config
   command: "/usr/bin/python {{ scipion_home_dir }}/scipion config --overwrite"
   become: yes
-  become_user: centos
-
+  become_user: "{{ user_name }}"
+  when: os == 'centos'
+  
 - name: Change scipion.config 1
   lineinfile:
     dest: "{{ scipion_config_file }}"
     regexp: '^MPI_LIBDIR'
     line: 'MPI_LIBDIR = /usr/lib64/openmpi/lib'
+  when: os == 'centos'
 
 - name: Change scipion.config 2
   lineinfile:
     dest: "{{ scipion_config_file }}"
     regexp: '^MPI_INCLUDE'
     line: 'MPI_INCLUDE = /usr/include/openmpi-x86_64'
+  when: os == 'centos'
 
 - name: Change scipion.config 3
   lineinfile:
     dest: "{{ scipion_config_file }}"
     regexp: '^MPI_BINDIR'
     line: 'MPI_BINDIR = /usr/lib64/openmpi/bin'
+  when: os == 'centos'
 
 - name: Run config
   command: "/usr/bin/python {{ scipion_home_dir }}/scipion config"
   become: yes
-  become_user: centos
+  become_user: "{{ user_name }}"
 
 
 - name: Create directory /services
   file:
     path: /services
     state: directory
-    owner: centos
-    group: centos
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
 
 - name: Web protocols
   blockinfile:
@@ -71,8 +76,8 @@
   lineinfile:
     dest: "{{ scipion_home_dir }}/config/hosts.conf"
     regexp: '^PARALLEL_COMMAND'
-    line: "PARALLEL_COMMAND = /usr/lib64/openmpi/bin/mpirun -hostfile /home/centos/mpi_hosts -np %_(JOB_NODES)d -bynode -x LD_LIBRARY_PATH={{ scipion_home_dir }}/software/lib:$LD_LIBRARY_PATH -x PATH={{ scipion_home_dir }}/software/em/xmipp/bin:$PATH %_(COMMAND)s"
-
+#    line: "PARALLEL_COMMAND = /usr/lib64/openmpi/bin/mpirun -hostfile /home/centos/mpi_hosts -np %_(JOB_NODES)d -bynode -x LD_LIBRARY_PATH={{ scipion_home_dir }}/software/lib:$LD_LIBRARY_PATH -x PATH={{ scipion_home_dir }}/software/em/xmipp/bin:$PATH %_(COMMAND)s"
+    line: "PARALLEL_COMMAND = /usr/lib64/openmpi/bin/mpirun -hostfile /home/centos/mpi_hosts --mca pml obl -np %_(JOB_NODES)d --mca plm_rsh_no_tree_spawn true --map-by node -x LD_LIBRARY_PATH={{ scipion_home_dir }}/software/lib:$LD_LIBRARY_PATH -x PATH={{ scipion_home_dir }}/software/em/xmipp/bin:$PATH %_(COMMAND)s"
 - name: Change mpi hostfile
   lineinfile:
     dest: "{{ mpi_hosts_file }}"

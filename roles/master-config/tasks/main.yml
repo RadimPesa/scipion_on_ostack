@@ -1,5 +1,8 @@
 ---
 
+- debug: var=user_name
+- debug: var=cluster_id
+- debug: var=os
 - name: Create dir ScipionUserData
   file:
     path: "{{ home_dir }}/ScipionUserData"
@@ -27,7 +30,12 @@
     state: mounted
 
 - name: Copy exports
-  copy: src=exports dest=/etc/exports owner=root group=root
+  copy: src=exports.{{os}} dest=/etc/exports owner=root group=root
 
-- name: Restart nfs
+- name: Restart nfs on ubuntu
+  service: name=nfs-kernel-server state=restarted
+  when: os == 'ubuntu'
+
+- name: Restart nfs on centos
   service: name=nfs-server state=restarted
+  when: os == 'centos'

@@ -2,10 +2,9 @@
 
 - include: centos.yml
   when: os == 'centos'
-  tags: package
 
 - include: ubuntu.yml
   when: os == 'ubuntu'
-  tags: package
+
 
 - debug: var=os
