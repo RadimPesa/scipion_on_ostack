@@ -10,6 +10,8 @@ Default number of worker nodes is 5, but it can be changed by setting variable *
 
 ## Start Scipion Web Tools cluster
 
+Scipion Web Tools cluster can be started in the following way:
+
 ```bash
 ansible-playbook scipion.yml -e count=3 -e cluster_id=cl -e os=centos
 ```
