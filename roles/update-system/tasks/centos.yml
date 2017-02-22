@@ -1,3 +1,9 @@
 ---
 - name: Update operating system
   yum: name=* state=latest update_cache=yes
+
+- name: install scipion prerequisities
+  yum: name={{ item }} state=present
+  with_items:
+   - screen
+   - mc

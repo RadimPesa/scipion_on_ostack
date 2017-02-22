@@ -110,7 +110,7 @@
     - vars/{{ os }}.yml
   pre_tasks:
     - name: install python
-      raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
+      raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python)
       when: os == 'ubuntu'
 
     - name: "Wait for SSH banners"

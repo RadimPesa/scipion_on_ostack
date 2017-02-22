@@ -18,7 +18,7 @@
   become: yes
   become_user: "{{ user_name }}"
   when: os == 'centos'
-  
+
 - name: Change scipion.config 1
   lineinfile:
     dest: "{{ scipion_config_file }}"
@@ -60,7 +60,7 @@
       [WEB_PROTOCOLS]
       XmippProtRansac = {"useQueue": 0, "numberOfThreads": 4, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
       EmanProtInitModel = {"useQueue": 0, "numberOfThreads": 4, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
-      XmippProtReconstructSignificant = {"useQueue": 0, "numberOfThreads": 1, "numberOfMpi": 16, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
+      XmippProtReconstructSignificant = {"useQueue": 0, "numberOfThreads": 1, "numberOfMpi": {{ number_of_mpi }}, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
       XmippProtAlignVolumeForWeb = {"useQueue": 0, "numberOfThreads": 4, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
       ProtMovieAlignment = {"useQueue": 0, "numberOfThreads": 1, "numberOfMpi": 1, "queueParams" : ["gpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
       XmippProtCreateMask3D = {"useQueue": 0, "numberOfThreads": 1, "numberOfMpi": 1, "queueParams" : ["cpu", {"JOB_MEMORY": "8192", "JOB_TIME": "72"}]}
@@ -77,7 +77,7 @@
     dest: "{{ scipion_home_dir }}/config/hosts.conf"
     regexp: '^PARALLEL_COMMAND'
 #    line: "PARALLEL_COMMAND = /usr/lib64/openmpi/bin/mpirun -hostfile /home/centos/mpi_hosts -np %_(JOB_NODES)d -bynode -x LD_LIBRARY_PATH={{ scipion_home_dir }}/software/lib:$LD_LIBRARY_PATH -x PATH={{ scipion_home_dir }}/software/em/xmipp/bin:$PATH %_(COMMAND)s"
-    line: "PARALLEL_COMMAND = /usr/lib64/openmpi/bin/mpirun -hostfile /home/centos/mpi_hosts --mca pml obl -np %_(JOB_NODES)d --mca plm_rsh_no_tree_spawn true --map-by node -x LD_LIBRARY_PATH={{ scipion_home_dir }}/software/lib:$LD_LIBRARY_PATH -x PATH={{ scipion_home_dir }}/software/em/xmipp/bin:$PATH %_(COMMAND)s"
+    line: "PARALLEL_COMMAND = {{ mpi_bin_dir }}/mpirun -hostfile {{ home_dir }}/mpi_hosts --mca pml ob1 -np %_(JOB_NODES)d --mca plm_rsh_no_tree_spawn true --map-by node -x LD_LIBRARY_PATH={{ scipion_home_dir }}/software/lib:$LD_LIBRARY_PATH -x PATH={{ scipion_home_dir }}/software/em/xmipp/bin:$PATH %_(COMMAND)s"
 - name: Change mpi hostfile
   lineinfile:
     dest: "{{ mpi_hosts_file }}"

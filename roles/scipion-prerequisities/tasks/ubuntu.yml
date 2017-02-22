@@ -7,3 +7,5 @@
    - libopenmpi-dev
    - openmpi-bin
    - gfortran
+   - libxft2
+   - libxss1

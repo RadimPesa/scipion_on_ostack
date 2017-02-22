@@ -13,3 +13,4 @@ worker_name: "worker_{{ cluster_id }}"
 alig_url: "http://dior.ics.muni.cz/~cuda/aliment.tar.gz"
 scipion_config_file: "/opt/scipion-web/config/scipion.conf"
 scipion_home_dir: "/opt/scipion-web"
+number_of_mpi: 16
